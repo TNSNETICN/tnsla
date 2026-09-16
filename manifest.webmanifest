@@ -1,0 +1,9 @@
+{
+  "name": "Lyranix Arcade",
+  "short_name": "Lyranix Arcade",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#050817",
+  "theme_color": "#050817",
+  "description": "Classic games. Modern browser."
+}

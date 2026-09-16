@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lyranix Arcade — Classic Games. Modern Browser.</title>
+<meta name="description" content="Lyranix Arcade — a curated browser arcade powered by Ruffle.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<header class="topbar"><div class="container topbar-inner">
+<a class="brand" href="index.html"><span class="brand-mark">L</span><span class="brand-name">LYRANIX <small>ARCADE</small></span></a>
+<nav class="nav"><a class="active" href="index.html">Home</a><a href="#games">Games</a><a href="#favorites">Favorites</a><a href="#recent">Recently Played</a><a href="saves.html">Save Data</a></nav>
+<input id="search" class="search" placeholder="Search games…" aria-label="Search games">
+</div></header>
+<main class="container">
+<section class="hero">
+<div class="hero-main"><div class="hero-grid"></div><div class="eyebrow">CLASSIC GAMES • MODERN BROWSER</div>
+<h1>LYRANIX <span>ARCADE</span></h1>
+<p>Your home for classic browser gaming. Play authorized Papa's games, Papa Louie adventures, and more directly in your browser with Ruffle.</p>
+<div class="actions"><a class="btn" href="#games">🎮 Start Playing</a><a class="btn secondary" href="javascript:randomGame()">🎲 Random Game</a></div></div>
+<aside class="hero-side"><div class="ruffle-badge">⚡ Ruffle</div><p>Flash emulation for modern browsers. No legacy Adobe Flash Player or browser plugin is required.</p><div class="status">● Arcade player ready</div></aside>
+</section>
+
+<section class="section" id="games"><div class="section-head"><h2>⭐ Featured Games</h2><a href="#all">View all →</a></div><div id="featured" class="grid"></div></section>
+<section class="section" id="all"><div class="section-head"><h2>🍕 Papa's Games</h2></div><div id="restaurant" class="grid"></div></section>
+<section class="section" id="adventures"><div class="section-head"><h2>🕹️ Papa Louie Adventures</h2></div><div id="adventure" class="grid"></div></section><section class="section" id="more"><div class="section-head"><h2>🎮 More Classics</h2></div><div id="moreGrid" class="grid"></div></section>
+<section class="section" id="favorites"><div class="section-head"><h2>⭐ Favorites</h2></div><div id="favoritesGrid" class="grid"></div></section><section class="section" id="recent"><div class="section-head"><h2>🕘 Recently Played</h2><a href="#" onclick="clearRecent();return false">Clear</a></div><div id="recentGrid" class="grid"></div></section>
+</main>
+<footer class="footer"><div class="container footer-inner"><div><b>LYRANIX ARCADE</b><br>Classic games. Modern browser.</div><div class="footer-links"><a href="about.html">About</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="contact.html">Contact</a></div><div>© 2026 Lyranix. Game rights remain with their respective owners.</div></div></footer>
+<script src="assets/games.js"></script><script src="assets/save.js"></script><script>
+const $=s=>document.querySelector(s);
+function card(g){return '<article class="card"><div class="thumb-wrap"><img class="thumb-img" loading="lazy" src="'+g.thumb+'" alt="'+g.title+' thumbnail" onerror="this.style.display=\'none\'"><div class="thumb-label">'+g.title+'</div></div><div class="card-body"><p>'+g.description+'</p><div class="meta">'+g.genre+' · '+g.controls+'</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:7px"><a class="play" href="player.html?game='+encodeURIComponent(g.id)+'">▶ Play</a><a class="play" href="game-info.html?game='+encodeURIComponent(g.id)+'">ℹ Info</a></div></div></article>'}
+function render(){const q=$('#search').value.trim().toLowerCase();const list=GAMES.filter(g=>(g.title+' '+g.genre+' '+g.description).toLowerCase().includes(q));$('#featured').innerHTML=list.slice(0,5).map(card).join('')||'<div class="empty">No games match your search.</div>';$('#restaurant').innerHTML=list.filter(g=>g.category==='restaurant').map(card).join('')||'<div class="empty">No restaurant games found.</div>';$('#adventure').innerHTML=list.filter(g=>g.category==='adventure').map(card).join('')||'<div class="empty">No adventure games found.</div>';if($('#moreGrid'))$('#moreGrid').innerHTML=list.filter(g=>g.category!=='restaurant'&&g.category!=='adventure').map(card).join('')||'<div class="empty">No additional games found.</div>';renderFavorites();renderRecent()}
+function renderFavorites(){const ids=JSON.parse(localStorage.getItem('lyranix_favorites')||'[]'),list=ids.map(id=>GAMES.find(g=>g.id===id)).filter(Boolean);if($('#favoritesGrid'))$('#favoritesGrid').innerHTML=list.length?list.map(card).join(''):'<div class="empty">Favorite games will appear here. Tap ☆ Favorite while playing.</div>'}
+function renderRecent(){const ids=JSON.parse(localStorage.getItem('lyranix_recent')||'[]'),list=ids.map(id=>GAMES.find(g=>g.id===id)).filter(Boolean);$('#recentGrid').innerHTML=list.length?list.map(card).join(''):'<div class="empty">Games you play will appear here.</div>'}
+function randomGame(){location.href='player.html?game='+encodeURIComponent(GAMES[Math.floor(Math.random()*GAMES.length)].id)}
+$('#search').addEventListener('input',render);render();
+</script></body></html>
